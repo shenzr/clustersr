@@ -41,5 +41,5 @@
 </attribute>
 <attribute><name>coordinator_ip</name><value>172.16.107.132</value></attribute>
 <attribute><name>local_ip</name><value>193.168.0.21</value></attribute>
-<attribute><name>local_data_path</name><value>/home/ncsgroup/zrshen/hadoop-3.1.1/dfs/data/current/BP-1900961041-192.168.0.21-1566963818132/current/finalized/subdir0</value></attribute>
+<attribute><name>local_data_path</name><value>/home/shenzr/hadoop-3.1.1/dfs/data/current/BP-1900961041-192.168.0.21-1566963818132/current/finalized/subdir0</value></attribute>
 </setting>
