@@ -1,0 +1,45 @@
+<setting>
+<attribute><name>erasure_code_k</name><value>4</value></attribute>
+<attribute><name>erasure_code_n</name><value>6</value></attribute>
+<attribute><name>peer_node_num</name><value>16</value></attribute>
+<attribute><name>rack_num</name><value>4</value></attribute>
+<attribute><name>chunk_size</name><value>67108864</value></attribute>
+<attribute><name>meta_size</name><value>524295</value></attribute>
+<attribute><name>packet_size</name><value>4194304</value></attribute>
+<attribute><name>stripe_num</name><value>1000</value></attribute>
+<attribute><name>cross_rack_bdwh</name><value>1</value></attribute>
+<attribute><name>balance_steps</name><value>20</value></attribute>
+<attribute><name>balance_dev</name><value>5</value></attribute>
+<attribute><name>intra_rack_bdwh</name><value>10</value></attribute>
+<attribute><name>peer_node_ips</name>
+<!-- cluster 1 -->
+<value>172.16.107.153</value>
+<value>172.16.107.147</value>
+<value>172.16.107.150</value>
+<value>172.16.107.152</value>
+<!-- cluster 2 -->
+<value>172.16.107.148</value>
+<value>172.16.107.142</value>
+<value>172.16.107.149</value>
+<value>172.16.107.138</value>
+<!-- cluster 3 -->
+<value>172.16.107.139</value>
+<value>172.16.107.140</value>
+<value>172.16.107.154</value>
+<value>172.16.107.146</value>
+<!-- cluster 4 -->
+<value>172.16.107.136</value>
+<value>172.16.107.143</value>
+<value>172.16.107.155</value>
+<value>172.16.107.144</value>
+</attribute>
+<attribute><name>proxy_ips</name>
+<value>172.16.107.151</value>
+<value>172.16.107.141</value>
+<value>172.16.107.135</value>
+<value>172.16.107.133</value>
+</attribute>
+<attribute><name>coordinator_ip</name><value>172.16.107.132</value></attribute>
+<attribute><name>local_ip</name><value>193.168.0.21</value></attribute>
+<attribute><name>local_data_path</name><value>/home/ncsgroup/zrshen/hadoop-3.1.1/dfs/data/current/BP-1900961041-192.168.0.21-1566963818132/current/finalized/subdir0</value></attribute>
+</setting>
