@@ -32,4 +32,4 @@ ClusterSRCoordinator: ClusterSRCoordinator.cc Coordinator.o Config.o Socket.o ti
 	$(CC) $(CFLAGS) -o $@ $^ $(CLIBS) $(JERASURE_LIB)
 
 clean:
-	rm ClusterSRCoordinator ClusterSRPeerNode *.o
+	rm ClusterSRCoordinator ClusterSRPeerNode *.o Jerasure/*.o

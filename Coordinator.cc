@@ -36,23 +36,21 @@ void Coordinator::init(void){
 
     // read the metadata from HDFS
     // parseLog();
-
     
-       ifstream readin("metadata/placement");
-       for(int i=0; i<_stripe_num; i++)
-       for(int j=0; j<_ecN; j++){
-       readin >> _placement[i*_ecN+j];
-       }
-       readin.close();
-     
-
-    printf("_placement:\n");
-    for(int i=0; i<_stripe_num; i++){
-        for(int j=0; j<_ecN; j++)
-            printf("%d ", _placement[i*_ecN+j]);
-        printf("\n");          
-    }
-    printf("\n");
+    ifstream readin("metadata/placement");
+    for(int i=0; i<_stripe_num; i++)
+    	for(int j=0; j<_ecN; j++){
+    		readin >> _placement[i*_ecN+j];
+    	}
+    readin.close();
+    
+    // printf("_placement:\n");
+    // for(int i=0; i<_stripe_num; i++){
+    //     for(int j=0; j<_ecN; j++)
+    //         printf("%d ", _placement[i*_ecN+j]);
+    //     printf("\n");          
+    // }
+    // printf("\n");
 }
 
 
@@ -94,7 +92,6 @@ void Coordinator::QuickSort_index(int* data, int* index,int left, int right){
 void Coordinator::preprocess(int fail_node, int specified_repair_num){
 
     std::cout << "----enter: preprocess" << std::endl;
-    // determine the number of repaired chunks  
     int i,j; 
     int index;
 
@@ -138,9 +135,9 @@ void Coordinator::preprocess(int fail_node, int specified_repair_num){
     _chnk_num_rack = (int*)malloc(sizeof(int)*_rack_num*_num_rebuilt_chunks);
     memset(_chnk_num_rack, 0, sizeof(int)*_rack_num*_num_rebuilt_chunks);
 
-    printf("node_num=%d\n",_peer_node_num);
-    printf("rack_num=%d\n",_rack_num);
-    printf("node_num_rack=%d\n", node_num_rack);
+    //printf("node_num=%d\n",_peer_node_num);
+    //printf("rack_num=%d\n",_rack_num);
+    //printf("node_num_rack=%d\n", node_num_rack);
     // calculate the number of remaining chunks in each rack
     for(i=0; i<_num_rebuilt_chunks; i++){
         fail_stripe = _related_stripes[i];
@@ -169,10 +166,10 @@ void Coordinator::preprocess(int fail_node, int specified_repair_num){
         QuickSort_index(_chnk_num_rack+_rack_num*i, _sort_rack_index+_rack_num*i, 0, _rack_num-1);
     }
 
-    printf("after sort: _chnk_num_rack:\n");
-    display(_rack_num, _num_rebuilt_chunks, _chnk_num_rack);
-    printf("after sort: _sort_rack_index:\n");
-    display(_rack_num, _num_rebuilt_chunks, _sort_rack_index);
+    //printf("after sort: _chnk_num_rack:\n");
+    //display(_rack_num, _num_rebuilt_chunks, _chnk_num_rack);
+    //printf("after sort: _sort_rack_index:\n");
+    //display(_rack_num, _num_rebuilt_chunks, _sort_rack_index);
 }
 
 // get decoding coefficient 
@@ -189,7 +186,6 @@ int* Coordinator::getDecodeCoeff(int* remain_chunks, int* complete_enc_mat, int 
         remain_chunk_id = remain_chunks[i];
         memcpy((char*)remain_mat + i*_ecK*sizeof(int), (char*)complete_enc_mat + remain_chunk_id*_ecK*sizeof(int), sizeof(int)*_ecK);
     }
-
     cout << "remain_matrix:" << std::endl;
     display(_ecK, _ecK, remain_mat);
 
@@ -291,8 +287,8 @@ void Coordinator::initCommand(string cmd[], string proxy_cmd[], int num_repair_c
                     break;
             }
         }
-        printf("slct_k_chk\n");
-        display(_ecK, 1, slct_k_chk+i*_ecK);
+        //printf("slct_k_chk\n");
+        //display(_ecK, 1, slct_k_chk+i*_ecK);
         assert(j!=_peer_node_num);
         decode_coeff[i] = getDecodeCoeff(slct_k_chk+i*_ecK, enc_matrix, fail_lgc_id[i]); 
     }
@@ -352,16 +348,16 @@ void Coordinator::initCommand(string cmd[], string proxy_cmd[], int num_repair_c
                     cmd[i] += "0";
                 cmd[i] += to_string(cur_coeff);
 
-		// get the next ip addr
+				// get the next ip addr
                 next_id = dest_node_id[j];
-		cout << "peerNodeIP = " << _conf->_peerNodeIPs[next_id] << endl;
+				cout << "peerNodeIP = " << _conf->_peerNodeIPs[next_id] << endl;
                 for(int h=0; h<NEXT_IP_LEN-(int)(to_string(_conf->_peerNodeIPs[next_id]).length()); h++)
                     cmd[i]+="0";
                 cmd[i] += to_string(_conf->_peerNodeIPs[next_id]);
 
                 // get the proxy ip addr
                 rack_id = i/num_node_per_rack;
-		cout << "proxy_IP = " << _conf->_proxyIPs[rack_id] << endl;
+				cout << "proxy_IP = " << _conf->_proxyIPs[rack_id] << endl;
 
                 for(int h=0; h<NEXT_IP_LEN-(int)(to_string(_conf->_proxyIPs[rack_id]).length()); h++)
                     cmd[i] += "0";
@@ -484,8 +480,8 @@ void Coordinator::initCommand(string cmd[], string proxy_cmd[], int num_repair_c
             }
         }
     }
-    cout << "rack_dl_cnt:" << endl;
-    display(_rack_num, 1, rack_dl_cnt);
+    //cout << "rack_dl_cnt:" << endl;
+    //display(_rack_num, 1, rack_dl_cnt);
 
 
     // generate each proxy cmd
@@ -499,17 +495,15 @@ void Coordinator::initCommand(string cmd[], string proxy_cmd[], int num_repair_c
                 in_rack_num[rack_id]++; 
             }
         }
-        cout << "in_rack_num:" << endl;
-        display(_rack_num, 1, in_rack_num);
+        //cout << "in_rack_num:" << endl;
+        //display(_rack_num, 1, in_rack_num);
 
         // calculate the cross-rack download traffic
-
         for(j=0; j<_rack_num; j++){
 
             if(in_rack_num[j]==0)
                 continue;
-            cout << "j = " << j << endl;
-            cout << "in_rack_num " << in_rack_num[j] << endl;
+
             if(proxy_cnt[j]==0)
                 proxy_cmd[j] = "00";
 
@@ -528,10 +522,10 @@ void Coordinator::initCommand(string cmd[], string proxy_cmd[], int num_repair_c
 
             // get the next_ip
             next_id = dest_node_id[i];
-            cout << "peerNodeIP = " << _conf->_peerNodeIPs[next_id] << endl;
+            //cout << "peerNodeIP = " << _conf->_peerNodeIPs[next_id] << endl;
             for(k=0; k<NEXT_IP_LEN-(int)(to_string(_conf->_peerNodeIPs[next_id]).length()); k++)
                 tmp_cmd += "0";
-	    tmp_cmd += to_string(_conf->_peerNodeIPs[next_id]);
+			tmp_cmd += to_string(_conf->_peerNodeIPs[next_id]);
 
             // get the proxy ip
             for(k=0; k<NEXT_IP_LEN; k++)
@@ -1896,34 +1890,21 @@ void Coordinator::parseLog(){
     // struct timeVal tv1, tv2;
     /////////////  read from NameNode //////////////
     string cmdResult;
-    // string cmdFsck("hdfs fsck / -files -blocks -locations");
-    // FILE* pipe = popen(cmdFsck.c_str(), "r");
-    // if(!pipe) 
-    //     cerr << "ERROR when using hdfs fsck" << endl;
-    // char cmdBuffer[256];
-    // while(!feof(pipe))
-    // {
-    //     if(fgets(cmdBuffer, 256, pipe) != NULL)
-    //     {
-    //         cmdResult += cmdBuffer;
-    //     }
-    // }
-    // pclose(pipe);
-    // / //////////////////////////////////////////////
+    string cmdFsck("hdfs fsck / -files -blocks -locations");
+    FILE* pipe = popen(cmdFsck.c_str(), "r");
+    if(!pipe) 
+        cerr << "ERROR when using hdfs fsck" << endl;
+    char cmdBuffer[256];
+    while(!feof(pipe))
+    {
+        if(fgets(cmdBuffer, 256, pipe) != NULL)
+        {
+            cmdResult += cmdBuffer;
+        }
+    }
+    pclose(pipe);
+    //////////////////////////////////////////////
      
-    
-    ////////////  read hdfs metadata ////////////////// 
-    // string cmdResult;
-    // FILE* fp = fopen("ec_hdfs_metadata", "r");
-    // char cmdBuffer[256];
-    // while(!feof(fp)){
-    //     if(fgets(cmdBuffer, 256, fp)!=NULL)
-    //         cmdResult += cmdBuffer;
-    // }
-    // cout << "Get the Metadata successfully" << endl;
-    // cout << cmdResult << endl;
-    /////// the result is stored in cmdResult as a string ///////////////
-
     //start to parse cmdResult
     //length of stripeID: 29
     //length of blkName: 24
