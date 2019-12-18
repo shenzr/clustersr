@@ -3,8 +3,12 @@ CLIBS = -pthread
 CFLAGS = -g -Wall -O2 -lm -lrt
 OBJ_DIR = obj
 UTIL_DIR = Util
+Jerasure_Dir = Jerasure
 JERASURE_LIB = Jerasure/jerasure.o Jerasure/galois.o Jerasure/reed_sol.o Jerasure/cauchy.o 
-all: tinyxml2.o Config.o Coordinator.o PeerNode.o ClusterSRPeerNode ClusterSRCoordinator
+all: jerasure tinyxml2.o Config.o Coordinator.o PeerNode.o ClusterSRPeerNode ClusterSRCoordinator
+
+jerasure: 
+	cd Jerasure/ && make && cd ..
 
 tinyxml2.o: Util/tinyxml2.cpp Util/tinyxml2.h
 	$(CC) $(CFLAGS) -c $<  

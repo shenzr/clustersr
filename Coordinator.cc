@@ -794,7 +794,7 @@ void Coordinator::recvACK(int* rpr_chk_dist, int num_repair_chnk_round){
     free(recv_ack);
     delete sock;
 }
-int Coordinator::RackSR(int fail_node){
+int Coordinator::ClusterSR(int fail_node){
 
     int cr_cnt;
     int i,j;
@@ -836,9 +836,9 @@ int Coordinator::RackSR(int fail_node){
 
     printf("_cross_rack_traf:\n");
     display(_num_rebuilt_chunks,1,_cross_rack_traf);
-    printf("RackSR-CR = %d\n", cr_cnt);
-    printf("===== RackSR: Balance CR =====\n");
-    RackSRBalance(fail_node, _num_repair_chnk_round);
+    printf("ClusterSR-CR = %d\n", cr_cnt);
+    printf("===== ClusterSR: Balance CR =====\n");
+    ClusterSRBalance(fail_node, _num_repair_chnk_round);
     
     free(_cross_rack_traf);
     return cr_cnt;
@@ -867,7 +867,7 @@ void Coordinator::RecordLoad(int* rack_upload, int* rack_download, int* rpr_sltn
 
 // this function will subtitude a selected chunk with a residual chunk to reduce the maximum upload traffic without increasing the maximum download traffic
 // if can find a chunk for substitution, then return 1; else 0;
-int Coordinator::RackSRSubChunkUpload(int num_repair_chnk_round, int num_remain_chnk, int* rpr_sltns, int* rpr_chnk, int* remain_rpr_chnk, int* rack_upload, int* rack_download){
+int Coordinator::ClusterSRSubChunkUpload(int num_repair_chnk_round, int num_remain_chnk, int* rpr_sltns, int* rpr_chnk, int* remain_rpr_chnk, int* rack_upload, int* rack_download){
 
     int i, j;
     int temp_chnk;
@@ -1012,7 +1012,7 @@ int Coordinator::RackSRSubChunkUpload(int num_repair_chnk_round, int num_remain_
 }
 
 // this function will subtitude a selected chunk with a residual chunk to reduce the maximum download traffic without increasing the maximum upload traffic
-void Coordinator::RackSRSubChunkDownload(int num_repair_chnk_round, int num_remain_chnk, int* rpr_sltns, int* rpr_chnk, int* remain_rpr_chnk, int* rack_upload, int* rack_download){
+void Coordinator::ClusterSRSubChunkDownload(int num_repair_chnk_round, int num_remain_chnk, int* rpr_sltns, int* rpr_chnk, int* remain_rpr_chnk, int* rack_upload, int* rack_download){
     int i,j;
     int temp_rpr_chnk, temp_rpr_chnk_idx;
     int rplc_rpr_chnk_idx;
@@ -1149,7 +1149,7 @@ void Coordinator::RackSRSubChunkDownload(int num_repair_chnk_round, int num_rema
     free(temp_rack_download);
 }
 
-void Coordinator::RackSROptimize(int num_repair_chnk_round, int* rpr_chnk_rnd, int* rack_upload, int* rack_download, int* rpr_sltns, int* des_rack_round, int* remain_rpr_chnk, int num_remain_chnk){
+void Coordinator::ClusterSROptimize(int num_repair_chnk_round, int* rpr_chnk_rnd, int* rack_upload, int* rack_download, int* rpr_sltns, int* des_rack_round, int* remain_rpr_chnk, int num_remain_chnk){
 
     int j;
     int max_upload, max_download;
@@ -1257,7 +1257,7 @@ void Coordinator::RackSROptimize(int num_repair_chnk_round, int* rpr_chnk_rnd, i
         }
         else{
             printf("----no upload optimization, call substitution\n");
-            int ret = RackSRSubChunkUpload(num_repair_chnk_round, num_remain_chnk, rpr_sltns, rpr_chnk_rnd, remain_rpr_chnk, rack_upload, rack_download);
+            int ret = ClusterSRSubChunkUpload(num_repair_chnk_round, num_remain_chnk, rpr_sltns, rpr_chnk_rnd, remain_rpr_chnk, rack_upload, rack_download);
             if(ret == 0){
                 printf("Cannot find upload substitution!\n");
             }
@@ -1353,12 +1353,12 @@ void Coordinator::RackSROptimize(int num_repair_chnk_round, int* rpr_chnk_rnd, i
         }
         else{
             printf("!!!! no optimization, call SubDownload\n");
-            RackSRSubChunkDownload(num_repair_chnk_round, num_remain_chnk, rpr_sltns, rpr_chnk_rnd, remain_rpr_chnk, rack_upload, rack_download);
+            ClusterSRSubChunkDownload(num_repair_chnk_round, num_remain_chnk, rpr_sltns, rpr_chnk_rnd, remain_rpr_chnk, rack_upload, rack_download);
         }
     }   
 }
 
-void Coordinator::RackSRInit(int num_repair_chnk_round, int* rpr_chnk, int* rpr_sltns, int* des_rack_round){
+void Coordinator::ClusterSRInit(int num_repair_chnk_round, int* rpr_chnk, int* rpr_sltns, int* des_rack_round){
     int i;
     int j;
     int rd_chnk_cnt;
@@ -1492,7 +1492,7 @@ int Coordinator::calSum(int* array, int len){
     return ret;
 }
 
-void Coordinator::RackSRBalance(int fail_node, int num_repair_chnk_round){
+void Coordinator::ClusterSRBalance(int fail_node, int num_repair_chnk_round){
     int i;
     int num_round;
     int rnd_cnt;
@@ -1554,13 +1554,13 @@ void Coordinator::RackSRBalance(int fail_node, int num_repair_chnk_round){
         printf("%d-th round, rpr_chnk:\n", rnd_cnt);
         display(num_repair_chnk_round, 1, rpr_chnk);
         printf("\n");
-        RackSRInit(num_repair_chnk_round, rpr_chnk, rpr_sltns, des_rack_round);
+        ClusterSRInit(num_repair_chnk_round, rpr_chnk, rpr_sltns, des_rack_round);
         // record the upload and download traffic
         RecordLoad(rack_upload, rack_download, rpr_sltns, num_repair_chnk_round);
         // optimize the repair solution
         for(int step = 0; step < _balance_steps; step++){
             printf("==== optimize step = %d ========\n", step);
-            RackSROptimize(num_repair_chnk_round, rpr_chnk, rack_upload, rack_download, rpr_sltns, des_rack_round, index, temp);
+            ClusterSROptimize(num_repair_chnk_round, rpr_chnk, rack_upload, rack_download, rpr_sltns, des_rack_round, index, temp);
             RecordLoad(rack_upload, rack_download, rpr_sltns, num_repair_chnk_round);
             // if the balancing ratio is small than a given deviation, then break
             total_cr_traf = calSum(rack_upload, _rack_num);

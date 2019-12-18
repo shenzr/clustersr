@@ -86,11 +86,11 @@ class Coordinator{
     void doProcess(int, int, int*, int*);
 
     void RecordLoad(int*, int*, int*, int);
-    void RackSRBalance(int, int);
-    void RackSRInit(int, int*, int*, int*);
-    void RackSROptimize(int, int*, int*, int*, int*, int*, int*, int);
-    void RackSRSubChunkDownload(int, int, int*, int*, int*, int*, int*);
-    int RackSRSubChunkUpload(int, int, int*, int*, int*, int*, int*);
+    void ClusterSRBalance(int, int);
+    void ClusterSRInit(int, int*, int*, int*);
+    void ClusterSROptimize(int, int*, int*, int*, int*, int*, int*, int);
+    void ClusterSRSubChunkDownload(int, int, int*, int*, int*, int*, int*);
+    int ClusterSRSubChunkUpload(int, int, int*, int*, int*, int*, int*);
 
     void RandSol(int, int*, int*);
     void CARSol(int, int*, int*);
@@ -100,7 +100,7 @@ class Coordinator{
     Coordinator(Config*);
     void preprocess(int, int);
     // calculate traffic 
-    int RackSR(int);
+    int ClusterSR(int);
     int CAR(int);
     int RandRepair(int);
     void freeGlobal(void);
