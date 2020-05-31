@@ -4,8 +4,10 @@ This is the prototype of our conference paper titled "ClusterSR: Cluster-Aware S
 
 Please feel free to run it.
 
-···
+###
 git clone https://github.com/shenzr/clustersr.git
+
 cd clustersr/ 
+
 make
-···
+###
